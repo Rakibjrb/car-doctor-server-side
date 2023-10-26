@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const {
   client,
   servicesCollection,
@@ -113,6 +114,18 @@ const adminApprove = async (req, res) => {
   }
 };
 
+const generateJWT = async (req, res) => {
+  const email = req.body;
+  const token = jwt.sign({ email }, process.env.JWT_SECRETE, {
+    expiresIn: "1h",
+  });
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+  });
+  sendResponse(res, token, 200, "Token Generate ok ....");
+};
+
 module.exports = {
   rootGet,
   getAllServices,
@@ -122,4 +135,5 @@ module.exports = {
   deleteOneOrder,
   getAllOrdersForAdmin,
   adminApprove,
+  generateJWT,
 };
