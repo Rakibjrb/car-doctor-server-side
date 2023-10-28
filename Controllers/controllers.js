@@ -6,6 +6,7 @@ const {
   ordersCollection,
 } = require("../DB/db");
 const sendResponse = require("../responseSend");
+require("dotenv").config();
 
 const rootGet = (req, res) => {
   sendResponse(res, [], 200, "Car doctor node server running fine");
@@ -115,15 +116,15 @@ const adminApprove = async (req, res) => {
 };
 
 const generateJWT = async (req, res) => {
-  const email = req.body;
-  const token = jwt.sign({ email }, process.env.JWT_SECRETE, {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.JWT_SECRETE, {
     expiresIn: "1h",
   });
   res.cookie("token", token, {
     httpOnly: true,
     secure: false,
   });
-  sendResponse(res, token, 200, "Token Generate ok ....");
+  sendResponse(res, {}, 200, "Token Generate ok ....");
 };
 
 module.exports = {
