@@ -39,6 +39,7 @@ const verifyToken = (req, res, next) => {
   if (!token) return sendResponse(res, {}, 403, "Forbidden");
   jwt.verify(token, process.env.JWT_SECRETE, (err, decoded) => {
     if (err) return sendResponse(res, {}, 401, "unauthorized");
+    req.user = decoded;
     next();
   });
 };
@@ -51,12 +52,7 @@ app.get("/", rootGet);
 app.get("/services", getAllServices);
 app.get("/services/:id", getService);
 app.get("/cart/orders/", verifyToken, getAllOrders);
-app.get(
-  "/cart/orders/admin/rakibul572157",
-
-  verifyToken,
-  getAllOrdersForAdmin
-);
+app.get("/cart/orders/admin/rakibul572157", verifyToken, getAllOrdersForAdmin);
 
 //all post methods
 app.post("/checkouts", verifyToken, postCheckout);

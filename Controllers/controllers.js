@@ -55,6 +55,9 @@ const postCheckout = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   const filter = { userEmail: req.query.userEmail };
+  const validUser = req.user.email;
+  if (req.query.userEmail !== validUser)
+    return sendResponse(res, {}, 403, "access denied");
   try {
     await client.connect();
     const data = await ordersCollection.find(filter).toArray();
