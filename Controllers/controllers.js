@@ -125,9 +125,14 @@ const generateJWT = async (req, res) => {
   });
   res.cookie("token", token, {
     httpOnly: true,
-    secure: false,
+    secure: true,
+    sameSite: "none",
   });
   sendResponse(res, {}, 200, "Token Generate ok ....");
+};
+
+const clearCookie = async (req, res) => {
+  await res.clearCookie("token", { maxAge: 0 }).send(req.body);
 };
 
 module.exports = {
@@ -140,4 +145,5 @@ module.exports = {
   getAllOrdersForAdmin,
   adminApprove,
   generateJWT,
+  clearCookie,
 };

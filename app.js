@@ -13,6 +13,7 @@ const {
   getAllOrdersForAdmin,
   adminApprove,
   generateJWT,
+  clearCookie,
 } = require("./Controllers/controllers");
 const { connectionCheck } = require("./DB/db");
 const sendResponse = require("./responseSend");
@@ -22,17 +23,14 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:5173"],
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(cookieParser());
-
-//custom middlewares
-// const logger = (req, res, next) => {
-//   console.log("from logger : ", req.host, req.originalUrl);
-//   next();
-// };
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies?.token;
@@ -57,6 +55,7 @@ app.get("/cart/orders/admin/rakibul572157", verifyToken, getAllOrdersForAdmin);
 //all post methods
 app.post("/checkouts", verifyToken, postCheckout);
 app.post("/jwt/token", generateJWT);
+app.post("/jwt/token/clear", clearCookie);
 
 //put or patch methods
 app.patch("/admin/order/approve", verifyToken, adminApprove);
